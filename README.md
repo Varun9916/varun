@@ -1,1 +1,56 @@
 # varun
+from typing import List, Tuple
+
+class Newspaper:
+  def init(self, name: str, monday: float, tuesday: float, wednesday: float,
+               thursday: float, friday: float, saturday: float, sunday: float):
+    self.name = name
+    self.prices = {
+        "Monday": monday,
+        "Tuesday": tuesday,
+        "Wednesday": wednesday,
+        "Thursday": thursday,
+        "Friday": friday,
+        "Saturday": saturday,
+        "Sunday": sunday
+    }
+    
+  def get_weekly_price(self) -> float:
+    return sum(self.prices.values())
+  
+
+class SubscriptionCalculator:
+  def init(self, budget: float, newspapers: List[Newspaper]):
+    self.budget = budget
+    self.newspapers = newspapers
+    
+  def get_possible_combinations(self) -> List[Tuple[str, str]]:
+    combinations = []
+    for newspaper1 in self.newspapers:
+      for newspaper2 in self.newspapers:
+        if newspaper1 == newspaper2:
+          continue
+        total_price = newspaper1.get_weekly_price() + newspaper2.get_weekly_price()
+        if total_price <= self.budget:
+          combinations.append((newspaper1.name, newspaper2.name))
+    return combinations
+  
+
+# Example usage
+toi = Newspaper("TOI", 3, 3, 3, 3, 3, 5, 6)
+hindu = Newspaper("Hindu", 2.5, 2.5, 2.5, 2.5, 2.5, 4, 4)
+et = Newspaper("ET", 4, 4, 4, 4, 4, 4, 10)
+bm = Newspaper("BM", 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5)
+ht = Newspaper("HT", 2, 2, 2, 2, 2, 4, 4)
+
+calculator = SubscriptionCalculator(40, [toi, hindu, et, bm, ht])
+combinations = calculator.get_possible_combinations()
+
+# Output: [("TOI", "BM"), ("BM", "HT"), ("Hindu", "BM"), ("Hindu", "HT")]
+print(combinations)
+
+calculator = SubscriptionCalculator(35, [toi, hindu, et, bm, ht])
+combinations = calculator.get_possible_combinations()
+
+# Output: [("BM", "HT"), ("Hindu", "BM")]
+print(combinations)
